@@ -25,10 +25,10 @@ export default function RootLayout({
         >
           {/* <Header/> */}
           <Header />
-          <main className="min-h-screen bg-gradient-to-b from-slate-200 to-blue-300">
+          <main className="min-h-screen bg-gradient-to-b from-slate-100 to-blue-500 ">
             {children}
           </main>
-          <footer className="text-center text-sm text-gray-500 dark:text-gray-400">
+          <footer className="text-center text-sm text-gray-500 dark:text-gray-400 py-12">
             <div className="py-4 container mx-auto px-4 text-center">
               <p>Made with ❤️ </p>
             </div>
