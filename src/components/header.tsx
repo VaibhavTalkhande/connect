@@ -1,14 +1,41 @@
-import React from "react";
+"use client"
+import React, { useEffect } from "react";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
-import { checkUser } from "@/lib/checkUser";
 import UserMenu from "./user-menu";
 import { Button } from "./ui/button";
 import { PenBox } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-async function Header() {
-  await checkUser();
+
+
+function Header() {
+  const router = useRouter();
+  useEffect(() => {
+    const verifyUser = async () => {
+      try {
+        const response = await fetch(`/api/user`, {
+          method: "GET",
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const user = data
+          console.log(data);
+          if (user && !user.role) { // If user exists but no role, redirect to onboarding
+            console.log(user);
+            router.push(`/onboarding?userId=${user.clerkUserId}`);
+          }
+        } else {
+          console.error("Failed to fetch user data:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error verifying user:", error);
+      }
+    };
+
+    verifyUser();
+  }, [router]);
 
   return (
     <nav className="mx-auto py-2 px-4 flex justify-between items-center shadow-md border-b-2">

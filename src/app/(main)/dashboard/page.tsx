@@ -6,7 +6,7 @@ import { BarLoader } from 'react-spinners';
 
 const DashBoard = () => {
     const {isLoaded,user} = useUser();
-    console.log(user);
+    // console.log(user);
   return (
     <div>
       {isLoaded ? (

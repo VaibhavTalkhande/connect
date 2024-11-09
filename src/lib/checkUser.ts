@@ -7,6 +7,7 @@ export const checkUser = async ()=>{
         return null;
     }
     try {
+        console.log(user);
         const loggedUser = await db?.user.findUnique({
             where:{
                 clerkUserId: user.id,

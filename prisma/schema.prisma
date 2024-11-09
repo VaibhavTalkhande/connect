@@ -13,68 +13,77 @@ model User {
   email          String  @unique
   username       String? @unique
   name           String?
-  imageUrl       String?
-  role           Role    @default(MENTEE) // NEW: Role field to differentiate Mentor and Mentee
+  imageUrl       String @default("https://via.placeholder.com/150")
+  role           Role?    // NEW: Role field to differentiate Mentor and Mentee
   expertise      String[] // NEW: Mentors specify their area of expertise
   bio            String? // NEW: Mentor biography for more info on profile
   events         Event[] @relation("UserEvents")
   bookings       Booking[] @relation("UserBookings")
-  availability   Availability?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  socials        Social[]
+}
+
+model Social {
+  id             String   @id @default(uuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  platform       String
+  link           String
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
+
 
 model Event {
   id             String    @id @default(uuid())
   title          String
   description    String?
-  duration       Int
-  price          Int       // NEW: Price for each event
+  price          Int
+  dateSlot       DateSlot[]
   userId         String
-  user           User      @relation("UserEvents", fields: [userId], references: [id])
-  bookings       Booking[]
-  isPrivate      Boolean   @default(true)
+  user           User      @relation("UserEvents", fields: [userId], references: [id], onDelete: Cascade)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model DateSlot{
+  id             String    @id @default(uuid())
+  eventId        String
+  event          Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  date           DateTime
+  timeSlot      TimeSlot[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model TimeSlot{
+  id             String    @id @default(uuid())
+  dateSlotId     String
+  dateSlot       DateSlot  @relation(fields: [dateSlotId], references: [id], onDelete: Cascade)
+  time           DateTime
+  isBooked       Boolean    @default(false)
+  booking        Booking? 
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 }
 
 model Booking {
   id             String     @id @default(uuid())
-  eventId        String
-  event          Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  timeSlotId     String     @unique // NEW: TimeSlotId to link bookings to time slots
+  timeSlot       TimeSlot   @relation(fields: [timeSlotId], references: [id], onDelete: Cascade)
   userId         String
   user           User       @relation("UserBookings", fields: [userId], references: [id]) // NEW: UserBookings relationship to link bookings to users
   name           String
   email          String
-  additionalInfo String?
-  startTime      DateTime
-  endTime        DateTime
   meetLink       String?
   googleEventId  String?
   paymentStatus  PaymentStatus @default(PENDING) // NEW: Payment status for booking
-    payment        Payment?
+  payment        Payment?
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 }
 
-model Availability {
-  id             String            @id @default(uuid())
-  userId         String            @unique
-  user           User              @relation(fields: [userId], references: [id])
-  days           DayAvailability[] 
-  timeGap        Int
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
-}
-
-model DayAvailability {
-  id             String     @id @default(uuid())
-  availabilityId String
-  day            DayOfWeek
-  startTime      DateTime
-  endTime        DateTime
-  availability   Availability @relation(fields: [availabilityId], references: [id], onDelete: Cascade)
-}
 
 model Payment {
   id             String     @id @default(uuid())
@@ -89,17 +98,9 @@ model Payment {
 enum Role {
   MENTOR
   MENTEE
+  ADMIN
 }
 
-enum DayOfWeek {
-  MONDAY
-  TUESDAY
-  WEDNESDAY
-  THURSDAY
-  FRIDAY
-  SATURDAY
-  SUNDAY
-}
 
 enum PaymentStatus {
   PENDING
