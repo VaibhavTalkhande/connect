@@ -28,10 +28,11 @@ model Social {
   id             String   @id @default(uuid())
   userId         String
   user           User     @relation(fields: [userId], references: [id])
-  platform       String
-  link           String
+  platform       String?
+  link           String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  @@unique([userId, platform])
 }
 
 

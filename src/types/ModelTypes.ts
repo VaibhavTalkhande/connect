@@ -1,62 +1,78 @@
+// types/ModelTypes.ts
+
+export enum Role {
+  MENTOR,
+  MENTEE,
+  ADMIN,
+}
+export enum PaymentStatus {
+  PENDING,
+  SUCCESS,
+  FAILED,
+}
+
 export interface UserType {
   id: string;
   clerkUserId: string;
   email: string;
-  username: string;
-  name: string;
+  username: string | null; // Nullable
+  name: string | null; // Nullable
   imageUrl: string;
-  role?: Role;
+  role?: Role; // Nullable
   expertise?: string[];
-  bio?: string;
+  bio?: string | null; // Nullable
   events?: EventType[];
   bookings?: BookingType[];
-  availability?: AvailabilityType[];
+  socials?: SocialType[];
+}
+
+export interface SocialType {
+  id: string;
+  userId: string;
+  user: UserType;
+  platform: string;
+  link?: string;
 }
 
 export interface EventType {
   id: string;
   title: string;
   description: string;
-  duration: number;
   price: number;
+  dateSlots: DateSlotType[];
   userId: string;
   user: UserType;
-  bookings: BookingType[];
+}
+
+export interface DateSlotType {
+  id: string;
+  eventId: string;
+  event: EventType;
+  date: Date;
+  timeSlots: TimeSlotType[];
+}
+
+export interface TimeSlotType {
+  id: string;
+  dateSlotId: string;
+  dateSlot: DateSlotType;
+  time: Date;
+  isBooked: boolean;
+  booking?: BookingType; // Optional
 }
 
 export interface BookingType {
   id: string;
-  eventId: string;
-  event: EventType;
+  timeSlotId: string;
+  timeSlot: TimeSlotType;
   userId: string;
   user: UserType;
   name: string;
   email: string;
-  additionalInfo: string;
-  startTime: Date;
-  endTime: Date;
   meetLink: string;
   googleEventId: string;
-  paymentStatus: string;
-}
-
-export interface AvailabilityType {
-  id: string;
-  userId: string;
-  user: UserType;
-  days: DaysAvailabilityType[];
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface DaysAvailabilityType {
-  id: string;
-  availabilityId: string;
-  day: DayOfWeek;
-  startTime: Date;
-  endTime: Date;
-  timeGap: number;
-  availability: AvailabilityType;
+  paymentStatus: PaymentStatus;
+  payment?: PaymentType;
 }
 
 export interface PaymentType {
@@ -65,28 +81,4 @@ export interface PaymentType {
   amount: number;
   status: PaymentStatus;
   booking: BookingType;
-  createdAt: Date;
-  updatedAt: Date;
 }
-
-export enum Role {
-  MENTOR,
-  MENTEE,
-}
-
-export enum DayOfWeek {
-  MONDAY,
-  TUESDAY,
-  WEDNESDAY,
-  THURSDAY,
-  FRIDAY,
-  SATURDAY,
-  SUNDAY,
-}
-
-export enum PaymentStatus {
-  PENDING,
-  SUCCESS,
-  FAILED,
-}
-

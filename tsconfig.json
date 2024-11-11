@@ -27,7 +27,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/(main)/onboarding/page.tsx"
+    "src/app/onboarding/page.tsx"
   ],
   "exclude": ["node_modules"]
 }

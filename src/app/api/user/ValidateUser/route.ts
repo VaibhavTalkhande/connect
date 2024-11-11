@@ -1,11 +1,13 @@
-import { NextResponse } from "next/server"; // Import the NextResponse helper
-import { db } from "../../../lib/prisma"; // Adjust the import path as necessary
+import { db } from "@/lib/prisma";
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+
+
 
 export async function GET() {
   const user = await currentUser();
   if (!user) {
-    return NextResponse.json({ message: "User not found" }, { status: 401 });
+    return NextResponse.json({ message: "User not found" }, { status: 404 });
   }
 
   try {
@@ -17,21 +19,15 @@ export async function GET() {
     });
 
     if (loggedUser) {
-      return NextResponse.json(loggedUser, { status: 200 });
+      return NextResponse.json({ message: "User already exists", user: loggedUser }, { status: 200 });
     }
 
     // Create a new user if not found
     const name = `${user.firstName} ${user.lastName}`;
     const uniqueName = name.split(" ").join("_") + user.id.slice(-4);
     const updateUser = await clerkClient();
-    console.log(uniqueName)
-    const clerkUser = await updateUser.users.getUser(user.id);
-    if (!clerkUser) {
-      return NextResponse.json(
-        { message: "Clerk user not found" },
-        { status: 404 }
-      );
-    }
+    console.log(uniqueName);
+
 
     // Update the user name in Clerk
     await updateUser.users.updateUser(user.id, {
@@ -48,13 +44,9 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json(newUser, { status: 201 });
+    return NextResponse.json({ message: "User created", user: newUser }, { status: 200 });
   } catch (error) {
     console.error("Error fetching or creating user:", error);
-    return NextResponse.json(
-      { message: "Internal Server Error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
   }
 }
-
