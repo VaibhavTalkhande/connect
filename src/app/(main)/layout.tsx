@@ -27,7 +27,7 @@ const MainLayout = ({
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <>
         {!isLoaded && <BarLoader color="#2563EB" width={"100%"} />}
-        <div className="flex flex-col h-screen bg-blue-50 md:flex-row">
+        <div className="flex flex-col h-screen bg-slate-900 md:flex-row">
           <SideMenu navItems={navItems} pathname={pathname} />
           {/* Main content */}
           <main className="flex-1 overflow-y-auto p-4 md:p-8">
@@ -41,7 +41,7 @@ const MainLayout = ({
           </main>
 
           {/* Bottom tabs for small screens */}
-          <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-md">
+          <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-black text-white shadow-md">
             <ul className="flex justify-around">
               {navItems.map((item) => (
                 <li key={item.href}>

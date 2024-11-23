@@ -36,20 +36,19 @@ export interface SocialType {
 
 export interface EventType {
   id: string;
-  title: string;
-  description: string;
+  title: string | null; // Nullable
+  description: string | null; // Nullable
   price: number;
-  dateSlots: DateSlotType[];
+  dateSlot: DateSlotType[];
   userId: string;
-  user: UserType;
+  
 }
 
 export interface DateSlotType {
   id: string;
-  eventId: string;
-  event: EventType;
+  eventId: string; 
   date: Date;
-  timeSlots: TimeSlotType[];
+  timeSlot: TimeSlotType[];
 }
 
 export interface TimeSlotType {

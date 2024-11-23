@@ -1,10 +1,11 @@
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useRouter } from "next/navigation";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useFieldArray, useForm } from "react-hook-form";
+import { z } from "zod";
 
 const timeSlotSchema = z.object({
   time: z
@@ -16,8 +17,7 @@ const timeSlotSchema = z.object({
 const dateSlotSchema = z.object({
   date: z
     .string()
-    .transform((val) => new Date(val))
-    .refine((date) => !isNaN(date.getTime()), "Invalid date format"),
+    .refine((date) => new Date(date), { message: "Invalid date format" }),
   timeSlots: z
     .array(timeSlotSchema)
     .nonempty("At least one time slot is required"),
@@ -47,7 +47,7 @@ const CreateEventForm = () => {
     defaultValues: {
       dateSlots: [
         {
-          date: new Date(), // Set default date as a Date object
+          date: new Date().toISOString().split("T")[0], // Set default date as a string in 'YYYY-MM-DD' format
           timeSlots: [{ time: "" }],
         },
       ],
@@ -94,44 +94,6 @@ const CreateEventForm = () => {
       onSubmit={handleSubmit(onSubmit, onInvalid)}
       className="space-y-6 p-6 bg-white shadow-md rounded-xl"
     >
-      {dateSlots.map((dateSlot, index) => (
-        <div key={index}>
-          <label className="block text-sm font-medium text-gray-700">
-            Date Slot {index + 1}
-          </label>
-          <input
-            type="date"
-            {...register(`dateSlots.${index}.date` as const)}
-            className="mt-1 block p-3 rounded-[0.5rem] border-2 border-black shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          />
-          {errors.dateSlots?.[index]?.date && (
-            <p className="mt-2 text-sm text-red-600">
-              {errors.dateSlots[index]?.date?.message}
-            </p>
-          )}
-
-          {/* TimeSlot Fields */}
-          <TimeSlotFields
-            control={control}
-            dateSlotIndex={index}
-            errors={errors}
-          />
-
-          <button
-            type="button"
-            onClick={() =>
-              appendDateSlot({
-                date: new Date().toISOString().split("T")[0],
-                timeSlots: [{ time: "" }],
-              })
-            }
-            className="mt-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Add Another Date Slot
-          </button>
-        </div>
-      ))}
-
       <div>
         <label className="block text-sm font-medium text-gray-700">Title</label>
         <input
@@ -169,7 +131,44 @@ const CreateEventForm = () => {
           <p className="mt-2 text-sm text-red-600">{errors.price.message}</p>
         )}
       </div>
+      {/* //date and timeSlot */}
+      {dateSlots.map((dateSlot, index) => (
+        <div key={index}>
+          <label className="block text-sm font-medium text-gray-700">
+            Date Slot {index + 1}
+          </label>
+          <input
+            type="date"
+            {...register(`dateSlots.${index}.date` as const)}
+            className="mt-1 block p-3 rounded-[0.5rem] border-2 border-black shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          />
+          {errors.dateSlots?.[index]?.date && (
+            <p className="mt-2 text-sm text-red-600">
+              {errors.dateSlots[index]?.date?.message}
+            </p>
+          )}
 
+          {/* TimeSlot Fields */}
+          <TimeSlotFields
+            control={control}
+            dateSlotIndex={index}
+            errors={errors}
+          />
+
+          <button
+            type="button"
+            onClick={() =>
+              appendDateSlot({
+                date: new Date().toISOString().split("T")[0],
+                timeSlots: [{ time: "" }],
+              })
+            }
+            className="mt-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Add Another Date Slot
+          </button>
+        </div>
+      ))}
       <button
         type="submit"
         className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
