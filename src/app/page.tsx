@@ -138,6 +138,11 @@ const Home = () => {
           </Button>
         </Link>
       </div>
+      <footer className="text-center text-sm text-gray-500 dark:text-gray-400 py-12 bg-slate-900 dark:bg-gray-800">
+        <div className="py-4 container mx-auto px-4 text-center">
+          <p>Made with ❤️ </p>
+        </div>
+      </footer>
     </main>
   );
 };

@@ -24,18 +24,13 @@ export default function RootLayout({
       <AuthProvider>
         <html lang="en">
           <body
-            className={`${inter.className} antialiased text-gray-900 dark:text-gray-100`}
+            className={`${inter.className} dark:bg-gray-900 dark:text-gray-100`}
           >
             {/* <Header/> */}
             <Header />
-            <main className="min-h-screen bg-gradient-to-br from-blue-800 to-slate-900 dark:from-gray-900 dark:to-gray-800">
+            <main className="h-screen bg-gradient-to-br  from-teal-400 via-teal-500 to-teal-600  overflow-hidden">
               {children}
             </main>
-            <footer className="text-center text-sm text-gray-500 dark:text-gray-400 py-12 bg-slate-900 dark:bg-gray-800">
-              <div className="py-4 container mx-auto px-4 text-center">
-                <p>Made with ❤️ </p>
-              </div>
-            </footer>
           </body>
         </html>
       </AuthProvider>

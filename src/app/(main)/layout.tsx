@@ -27,18 +27,23 @@ const MainLayout = ({
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <>
         {!isLoaded && <BarLoader color="#2563EB" width={"100%"} />}
-        <div className="flex flex-col h-screen bg-slate-900 md:flex-row">
+        <div className="flex flex-col h-full w-full bg-teal-600 md:flex-row overflow-hidden">
           <SideMenu navItems={navItems} pathname={pathname} />
           {/* Main content */}
-          <main className="flex-1 overflow-y-auto p-4 md:p-8">
-            <header className="flex justify-between items-center mb-4">
-              <h2 className="text-5xl md:text-6xl gradient-title pt-2 md:pt-0 text-center md:text-left w-full">
+          <div className="flex-1 flex flex-col overflow-hidden">
+            {/* Header */}
+            <header className="flex-shrink-0 p-4 md:p-8">
+              <h2 className="text-5xl md:text-6xl gradient-title text-center md:text-left w-full">
                 {navItems.find((item) => item.href === pathname)?.label ||
                   "Dashboard"}
               </h2>
             </header>
-            {children}
-          </main>
+
+            {/* Scrollable content */}
+            <main className="flex-1 overflow-y-auto  h-full w-full px-4 md:px-8 pb-4">
+              {children}
+            </main>
+          </div>
 
           {/* Bottom tabs for small screens */}
           <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-black text-white shadow-md">

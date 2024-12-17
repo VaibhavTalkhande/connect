@@ -180,7 +180,7 @@ const CreateEventForm = () => {
 };
 
 // Time Slot Fields
-const TimeSlotFields = ({
+export const TimeSlotFields = ({
   control,
   dateSlotIndex,
   errors,

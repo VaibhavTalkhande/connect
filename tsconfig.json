@@ -28,6 +28,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/app/onboarding/page.tsx"
-, "src/app/(main)/events/edit/page.tsx"  ],
+, "src/app/(main)/events/[id]/edit/page.tsx"  ],
   "exclude": ["node_modules"]
 }

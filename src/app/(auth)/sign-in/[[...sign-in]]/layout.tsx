@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 
 const SignInLayout = ({ children }: { children: ReactNode }): React.JSX.Element => { 
     return (
-        <div className="flex items-center justify-center bg-green-900 bg-opacity-50 z-10 w-full h-screen">
+        <div className=" absolute top-0 left-0 flex items-center justify-center bg-teal-600  z-10 w-full h-[100vh]">
             <main>
                 {children}
             </main>
