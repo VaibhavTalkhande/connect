@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   const user = await currentUser();
   if (!user) {
-    return NextResponse.json({ message: "User not found" }, { status: 404 });
+    return ;
   }
 
   try {

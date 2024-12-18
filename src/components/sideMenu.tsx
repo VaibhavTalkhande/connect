@@ -9,16 +9,16 @@ interface SideMenuProps {
 
 const SideMenu: React.FC<SideMenuProps> = ({navItems,pathname}) => {
   return (
-    <aside className="hidden md:block w-64 bg-white">
+    <aside className=" hidden md:block w-64 rounded-xl sm:w-72 bg-transparent shadow-md">
 
-    <nav className="mt-8"> 
+    <nav className="mt-8 block "> 
       <ul>
         {navItems.map((item) => (
           <li key={item.href}>
             <Link
               href={item.href}
-              className={`flex items-center px-4 py-4 text-gray-700  hover:bg-gray-100 ${
-                pathname === item.href ? "bg-blue-100" : ""
+              className={`flex items-center px-4 py-4 text-gray-700 font-semibold rounded-r-xl  hover:bg-gray-100 ${
+                pathname === item.href ? "bg-teal-500" : ""
               }`}
             >
               <item.icon className="w-5 h-5 mr-3" />

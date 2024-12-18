@@ -24,11 +24,11 @@ export default function RootLayout({
       <AuthProvider>
         <html lang="en">
           <body
-            className={`${inter.className} dark:bg-gray-900 dark:text-gray-100`}
+            className={`${inter.className} dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200`}
           >
             {/* <Header/> */}
             <Header />
-            <main className="h-screen bg-gradient-to-br  from-teal-400 via-teal-500 to-teal-600  overflow-hidden">
+            <main className="h-full bg-gradient-to-br  from-teal-400 via-white to-teal-600  overflow-x-hidden">
               {children}
             </main>
           </body>

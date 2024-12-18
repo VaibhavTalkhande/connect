@@ -23,7 +23,11 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser,
     };
     const fetchUser = useCallback(async () => {
+        if (!user) {
+            return;
+        }
         const userDetails = await axios.get("/api/user/ValidateUser");
+        
         if (userDetails.data.user) {
             const userdata = userDetails.data.user;
             setUser(()=>userdata);
@@ -31,10 +35,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 router.push("/onboarding");
             }
         }
-        else {
-            router.push("/sign-up");
-        }
-    }, [router, user?.role]);
+    }, [router,user]);
     useEffect(() => {
         fetchUser();
     }, [fetchUser]);

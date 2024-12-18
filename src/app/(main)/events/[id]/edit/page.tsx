@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useForm, Controller, useFieldArray } from "react-hook-form";
-import { getEventById } from "../../../../../../actions/event";
+import { useForm, Controller, useFieldArray, Control, FieldErrors, useWatch } from "react-hook-form";
+import { editEventById, getEventById } from "../../../../../../actions/event";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2 } from "lucide-react";
-import { time } from "console";
-import { TimeSlotFields } from "../create/page";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
+import { Description } from "@radix-ui/react-dialog";
 
 type Event = {
   id?: string;
@@ -61,7 +61,6 @@ const EditEventForm = () => {
     reset,
     handleSubmit,
     control,
-    setValue,
     formState: { errors },
   } = useForm<EventSchemaType>({
     resolver: zodResolver(EventSchema),
@@ -108,42 +107,58 @@ const EditEventForm = () => {
         }
         setLoading(false);
       } catch (err) {
-        setError("Failed to fetch event details.");
+        setError("Error loading event details.");
+        console.error(err);
         setLoading(false);
       }
     };
     fetchEventDetails();
   }, [id]);
 
-  useEffect(() => {
-         if (event) {
-            reset({
-              title: event.title,
-              description: event.description ?? "",
-              price: event.price,
-              dateSlots: event.dateSlot.map((dateSlot) => ({
-                date:formatDate(dateSlot.date),
-                timeSlots: dateSlot.timeSlot.map((timeSlot) => ({
-                  time: timeSlot.time.toLocaleTimeString('en-GB'),
-                  isBooked: timeSlot.isBooked ?? false,
-                })),
-              })),
-            });
-          }
-  },[id])
+
   const formatDate = (date: Date) => {
     
     return new Date(date).toISOString().split('T')[0];
   };
 
-  const formatTime = (date: Date) => {
-    const hh = String(date.getHours()).padStart(2, "0");
-    const min = String(date.getMinutes()).padStart(2, "0");
-    return `${hh}:${min}`;
-  };
   const onSubmit = async (data: EventSchemaType) => {
-    // TODO: Implement submit logic
-    console.log("Submitted data:", data);
+    try {
+      const formattedData = {
+        ...data,
+        description: data.description ?? null,
+        dateSlot: data.dateSlots.map((dateSlot) => ({
+          ...dateSlot,
+          date: new Date(dateSlot.date),
+          timeSlot: dateSlot.timeSlots.map((timeSlot) => ({
+            time: new Date(`1970-01-01T${timeSlot.time}`),
+            isBooked: timeSlot.isBooked ?? false,
+          })),
+        })),
+      };
+      
+      // Log the formatted data for debugging
+      console.log('Formatted Data:', JSON.stringify(formattedData, null, 2));
+      
+      // Call the action
+      const res = await editEventById(id, formattedData);
+      if (res.status === 200) {
+        toast.success('Event updated successfully');
+      }
+      
+      // Handle the response
+      if (res.success) {
+        // Handle successful update (e.g., show success message, redirect)
+        console.log('Event updated successfully', res.event);
+        // Maybe use a toast or router to navigate/show success
+      } else {
+        // Handle error (show error message)
+        console.error('Failed to update event', res);
+        // Maybe set an error state or show an error toast
+      }
+    } catch (error) {
+      // Catch any unexpected errors
+      console.error('Unexpected error in form submission', error);
+    }
   };
 
   if (loading) {
@@ -159,6 +174,7 @@ const EditEventForm = () => {
       onSubmit={handleSubmit(onSubmit)}
       className="max-w-4xl mx-auto p-6 bg-gray-100 shadow-md rounded-md space-y-6"
     >
+      <Toaster/>
       <h1 className="text-xl font-bold text-center">Edit Event</h1>
 
       <div className="space-y-4">
@@ -272,6 +288,64 @@ const EditEventForm = () => {
         </Button>
       </div>
     </form>
+  );
+};
+
+// Time Slot Fields
+type TimeSlotFieldsProps = {
+  control: Control<EventSchemaType>;
+  dateSlotIndex: number;
+  errors: FieldErrors<EventSchemaType>;
+};
+
+const TimeSlotFields: React.FC<TimeSlotFieldsProps> = ({
+  control,
+  dateSlotIndex,
+  errors,
+}) => {
+  const { fields: timeSlots, append: appendTimeSlot,remove:removeTimeSlot } = useFieldArray({
+    control,
+    name: `dateSlots.${dateSlotIndex}.timeSlots`,
+  });
+
+  return (
+    <div className="space-y-4 border-b border-black p-4">
+      {timeSlots.map((timeSlot, index) => (
+        <div key={timeSlot.id} className="flex items-center space-x-4">
+          <Controller
+            control={control}
+            name={`dateSlots.${dateSlotIndex}.timeSlots.${index}.time` as const}
+            render={({ field }) => (
+              <input
+                type="time"
+                {...field}
+                className="p-3 rounded-[0.5rem] border-2 border-black shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              />
+            )}
+          />
+          {errors.dateSlots?.[dateSlotIndex]?.timeSlots?.[index]?.time && (
+            <p className="mt-2 text-sm text-red-600">
+              {errors.dateSlots[dateSlotIndex]?.timeSlots[index]?.time?.message}
+            </p>
+          )}
+        <button
+          type="button"
+          onClick={() => removeTimeSlot(index)}
+          className="mt-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+          Remove Time Slot
+        </button>
+        </div>
+      ))}
+
+      <button
+        type="button"
+        onClick={() => appendTimeSlot({ time: "" , isBooked: false})}
+        className="mt-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      >
+        Add Another Time Slot
+      </button>
+    </div>
   );
 };
 

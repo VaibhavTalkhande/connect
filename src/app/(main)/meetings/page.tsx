@@ -79,8 +79,9 @@ const BookingPage = () => {
         } else {
           setError(response.message || "Failed to fetch bookings");
         }
-      } catch (err) {
-        setError("An unexpected error occurred");
+      } catch (error) {
+        console.error(error);
+        setError("Failed to fetch bookings");
       } finally {
         setLoading(false);
       }
@@ -93,7 +94,7 @@ const BookingPage = () => {
   if (error) return <Typography color="error">{error}</Typography>;
 
   return (
-    <Box>
+    <Box height="100%" p={2}>
       <Typography variant="h4" gutterBottom>
         Your Bookings
       </Typography>

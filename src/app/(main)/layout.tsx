@@ -2,8 +2,6 @@
 
 import SideMenu from "@/components/sideMenu";
 import { useUser } from "@clerk/nextjs";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { BarChart, Calendar, Clock, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -24,23 +22,22 @@ const MainLayout = ({
   const { isLoaded } = useUser();
   const pathname = usePathname();
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <>
         {!isLoaded && <BarLoader color="#2563EB" width={"100%"} />}
-        <div className="flex flex-col h-full w-full bg-teal-600 md:flex-row overflow-hidden">
+        <div className="flex flex-col min-h-full w-full  md:flex-row overflow-hidden">
           <SideMenu navItems={navItems} pathname={pathname} />
           {/* Main content */}
-          <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1 flex flex-col  h-full overflow-hidden">
             {/* Header */}
-            <header className="flex-shrink-0 p-4 md:p-8">
-              <h2 className="text-5xl md:text-6xl gradient-title text-center md:text-left w-full">
+            <header className="flex-shrink-0 p-4 h-full md:p-8">
+              <h2 className="text-4xl md:text-2xl gradient-title text-center font-bold md:text-left w-full">
                 {navItems.find((item) => item.href === pathname)?.label ||
                   "Dashboard"}
               </h2>
             </header>
 
             {/* Scrollable content */}
-            <main className="flex-1 overflow-y-auto  h-full w-full px-4 md:px-8 pb-4">
+            <main className="flex-1 overflow-y-auto h-full w-full px-4 md:px-8 pb-4">
               {children}
             </main>
           </div>
@@ -65,7 +62,6 @@ const MainLayout = ({
           </nav>
         </div>
       </>
-    </LocalizationProvider>
   );
 };
 

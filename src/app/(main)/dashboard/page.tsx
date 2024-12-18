@@ -8,7 +8,7 @@ const DashBoard = () => {
     const {isLoaded,user} = useUser();
     // console.log(user);
   return (
-    <div>
+    <div className='h-full w-full'>
       {isLoaded ? (
         <div>
           <Card>

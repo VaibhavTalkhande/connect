@@ -3,13 +3,12 @@ import React, { useContext, useEffect } from "react";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import Link from "next/link";
 import UserMenu from "./user-menu";
-import { Button } from "./ui/button";
-import { PenBox } from "lucide-react";
+
 import { useRouter } from "next/navigation";
 import{ AuthContext} from "@/context/AuthContext";
 import { Role } from "@/types/ModelTypes";
 import { DashboardIcon } from "@radix-ui/react-icons";
-import DashBoard from '../app/(main)/dashboard/page';
+
 
 
 
@@ -28,12 +27,12 @@ function Header() {
         }
       }
     },
-    [user]
+    [user,router]
  )
   return (
-    <nav className="mx-auto my-auto py-4 px-4 flex justify-between rounded-lg  bg-white border-2 border-bottom-black items-center shadow-xl shadow-black">
+    <nav className="mx-auto my-auto py-4 px-4 flex justify-between rounded-lg  bg-black  border-bottom-black items-center shadow-xl shadow-black">
       <Link href="/" className="flex items-center">
-        <h1 className="text-4xl font-extrabold font-sans text-pretty  text-slate-950">
+        <h1 className="text-4xl font-extrabold font-sans text-pretty  text-teal-500">
           Connect
         </h1>
       </Link>
