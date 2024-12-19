@@ -1,8 +1,10 @@
 "use client";
 import axios from "axios";
-import { LinkIcon, EyeIcon, Pencil } from "lucide-react"; // Import icons from Lucide React
+import { LinkIcon, EyeIcon, Pencil, Trash } from "lucide-react"; // Import icons from Lucide React
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { deleteEventById } from "../../actions/event";
+import toast, { Toaster } from "react-hot-toast";
 
 type TimeSlot = {
   id: number;
@@ -62,26 +64,43 @@ const EventList = () => {
 
     fetchEvents();
   }, []);
+  const deleteEvent = async (id: string) => {
+    try {
+      const response = await deleteEventById(id);
+      if (response.status== 200) {
+        setEvents(events.filter((event) => event.id.toString() !== id));
+        toast.success("Event deleted successfully");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   if (loading) return <p>Loading events...</p>;
   if (error) return <p>{error}</p>;
 
   return (
     <div className="w-full mx-auto px-4 py-16">
+      <Toaster />
       <div className="flex h-full flex-wrap justify-start gap-6">
         {events.map((event) => (
           <div
             key={event.id}
-            className="relative p-6 w-full sm:w-72 bg-black shadow-lg rounded-xl transform transition hover:scale-105"
+            className="relative flex flex-row p-6 w-full sm:w-72 bg-black shadow-lg rounded-xl transform transition hover:scale-105"
           >
-            <div className="absolute inset-0 transform translate-x-[-10px] translate-y-[-10px] bg-teal-500 rounded-xl -z-10"></div>
-            <div className="relative z-10 flex-col mb-4">
+            <div className="block absolute inset-0 transform translate-x-[-10px] translate-y-[-10px] bg-teal-500 rounded-xl -z-10"></div>
+            <div className="relative z-10 w-[90%] flex-col mb-4">
               <h2 className="text-xl font-bold mb-2">{event.title || "Event Title"}</h2>
               <p className="text-gray-700 mb-4">{event.description || "No description available"}</p>
             </div>
 
             {/* Buttons at the bottom */}
-            <div className="absolute bottom-4 left-3/4 mt-4 transform -translate-x-1/2 flex gap-4">
+            <div className="flex-col   flex gap-4">
+              <button
+               onClick={() => deleteEvent(event.id.toString())}
+               className="  bg-red-600 text-white p-2 rounded-full hover:bg-gray-700">
+                <Trash className="w-6 h-6" />
+              </button>
               <button
                 onClick={() => redirectToEvent(event.id.toString())}
                 className="bg-teal-500 text-white p-2 rounded-full hover:bg-teal-600"
@@ -106,17 +125,18 @@ const EventList = () => {
           <div className="bg-white p-6 rounded-lg w-11/12 sm:w-1/3">
             <h2 className="text-2xl font-bold mb-4">{selectedEvent.title}</h2>
             <p className="text-gray-700 mb-4">{selectedEvent.description}</p>
-            <p className="text-gray-700 mb-4">Price: ${selectedEvent.price}</p>
+            <p className="text-gray-700 mb-4">Price:{selectedEvent.price} Rs</p>
             <div className="space-y-2">
               {selectedEvent.dateSlot.map((dateSlot) => (
-                <div key={dateSlot.id}>
+                <div key={dateSlot.id} className="border p-4 rounded-lg">
                   <h4 className="font-semibold">
                     Date: {new Date(dateSlot.date).toLocaleDateString()}
                   </h4>
+                  <div className="flex flew-row flex-wrap justify-start items-start gap-4 w-full">
                   {dateSlot.timeSlot.map((time) => (
                     <div
                       key={time.id}
-                      className={`p-2 rounded-lg text-center ${
+                      className={`py-2  rounded-lg w-[40%] text-center ${
                         time.isBooked ? "bg-gray-400" : "bg-teal-500"
                       }`}
                     >
@@ -126,6 +146,7 @@ const EventList = () => {
                       })}
                     </div>
                   ))}
+                  </div>
                 </div>
               ))}
             </div>

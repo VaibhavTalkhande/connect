@@ -1,5 +1,5 @@
 "use client"
-import React, { useContext, useState } from "react";
+import React, { use, useContext, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,7 +10,7 @@ import axios from "axios";
 import { AuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { Role } from "@/types/ModelTypes";
-import { Youtube } from "lucide-react";
+import { Trash2Icon, Youtube } from "lucide-react";
 
 
 
@@ -81,6 +81,7 @@ const OnboardingForm: React.FC = () => {
    handleSubmit,
    setValue,
    watch,
+   getValues,
    formState: { errors},
  } = useForm<UserFormInput>({
    resolver: zodResolver(UserSchema),
@@ -215,7 +216,7 @@ const OnboardingForm: React.FC = () => {
           htmlFor="expertise"
           className="block text-sm font-medium text-gray-700"
         >
-          Expertise
+          Domain
         </Label>
         <div className="flex flex-row space-x-2">
           <input
@@ -233,7 +234,7 @@ const OnboardingForm: React.FC = () => {
             Add
           </Button>
         </div>
-        <div className="flex flex-wrap items-center space-x-2 space-y-2 mt-2">
+        <div className="flex flex-wrap items-center justify-start space-x-2 space-y-2 mt-2 ">
           {suggestedFields.map((tag) => (
             <Button
               key={tag}
@@ -245,16 +246,16 @@ const OnboardingForm: React.FC = () => {
             </Button>
           ))}
         </div>
-        <div className="mt-2 space-y-1">
+        <div className="mt-2 flex flex-wrap items-start  space-x-2 justify-start">
           {expertise.map((tag) => (
-            <div key={tag} className="flex items-center justify-between">
-              <p className="text-gray-700">{tag}</p>
+            <div key={tag} className="h-full flex items-center justify-between bg-blue-500  max-w-1/2  border-none rounded">
+              <p className="text-white px-2">{tag}</p>
               <Button
                 type="button"
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded"
+                className="h-full  text-red-700 font-bold bg-inherit text-2xl pl-0 rounded-r-xl border-none items-center text-center  "
                 onClick={() => handleExpertise(tag, "remove")}
               >
-                Remove
+                <Trash2Icon />
               </Button>
             </div>
           ))}
@@ -265,42 +266,44 @@ const OnboardingForm: React.FC = () => {
       </div>
 
       {/* Social links */}
-      <div>
+      <div className="flex flex-col w-full ">
         <label className="block text-sm font-medium text-gray-700">
-          Social links
+          Social links(optional)
         </label>
-        {socials.map((social) => (
-          <div key={social.platform} className="mt-2">
-            <Label
-              htmlFor={social.platform}
-              className="flex items-center space-x-2"
-            >
-              {social.platform === "YouTube" && <Youtube />}
-              {social.platform === "LinkedIn" && <LinkedInLogoIcon />}
-              {social.platform === "Twitter" && <TwitterLogoIcon />}
-              {social.platform === "GitHub" && <GitHubLogoIcon />}
-              {social.platform === "Instagram" && <InstagramLogoIcon />}
-              <span>{social.platform}</span>
-            </Label>
-            <input
-              type="text"
-              id={social.platform}
-              onChange={(e) =>
-                handleSocialChange(social.platform, e.target.value)
-              }
-              className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-        ))}
-        {errors.socials && (
-          <p className="mt-2 text-sm text-red-600">{errors.socials.message}</p>
-        )}
+        <div className="flex items-center flex-row flex-wrap gap-2">
+          {socials.map((social) => (
+            <div key={social.platform} className="mt-2 min-w-[45%]">
+              <Label
+                htmlFor={social.platform}
+                className="flex items-center space-x-2"
+              >
+                {social.platform === "YouTube" && <Youtube />}
+                {social.platform === "LinkedIn" && <LinkedInLogoIcon />}
+                {social.platform === "Twitter" && <TwitterLogoIcon />}
+                {social.platform === "GitHub" && <GitHubLogoIcon />}
+                {social.platform === "Instagram" && <InstagramLogoIcon />}
+                <span>{social.platform}</span>
+              </Label>
+              <input
+                type="text"
+                id={social.platform}
+                onChange={(e) =>
+                  handleSocialChange(social.platform, e.target.value)
+                }
+                className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+          ))}
+          {errors.socials && (
+            <p className="mt-2 text-sm text-red-600">{errors.socials.message}</p>
+          )}
+        </div>
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex justify-center w-full">
         <Button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-black lg:w-1/2 hover:bg-blue-700 text-white items-center justify-center font-bold py-2 px-4 rounded"
           
         >
           submit

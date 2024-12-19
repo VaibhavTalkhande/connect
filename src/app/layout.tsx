@@ -28,7 +28,7 @@ export default function RootLayout({
           >
             {/* <Header/> */}
             <Header />
-            <main className="h-full bg-gradient-to-br  from-teal-400 via-white to-teal-600  overflow-x-hidden">
+            <main className="h-full relative  bg-gradient-to-br  from-teal-400 via-white to-teal-600  overflow-x-hidden">
               {children}
             </main>
           </body>

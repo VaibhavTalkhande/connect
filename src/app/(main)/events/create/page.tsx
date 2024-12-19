@@ -9,7 +9,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { useRouter} from "next/navigation";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { createEvent } from "../../../../../../actions/event";
+import { createEvent } from "../../../../../actions/event";
 
 
 

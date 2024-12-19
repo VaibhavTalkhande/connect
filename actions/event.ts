@@ -268,3 +268,62 @@ export const editEventById = async (id: string, eventData: Event) => {
     };
   }
 };
+
+
+export const deleteEventById = async (id: string) => {
+  try {
+    // Validate input parameters
+    if (!id) {
+      return { 
+        success: false,
+        message: "Event ID is required", 
+        status: 400 
+      };
+    }
+
+    // Authenticate user
+    const user = await currentUser();
+    if (!user) {
+      return { 
+        success: false,
+        message: "User not authenticated", 
+        status: 401 
+      };
+    }
+    const validUser = await db.user.findFirst({
+      where: { clerkUserId: user.id },
+    });
+    if (!validUser) {
+      return { 
+        success: false,
+        message: "User not found", 
+        status: 404 
+      };
+    }
+    // Perform the database delete operation
+    await db.event.delete({ where: { id,userId:validUser.id } });
+
+    return {
+      success: true,
+      message: "Event deleted successfully",
+      status: 200,
+    };
+  } catch (error) {
+    // Log the full error for server-side debugging
+    console.error('Error in deleteEventById:', error);
+
+    // Return a structured error response
+    return {
+      success: false,
+      message: error || "Failed to delete event",
+      status: 500,
+      error: error instanceof Error 
+        ? {
+            name: error.name,
+            message: error.message,
+            stack: error.stack
+          }
+        : null
+    };
+  }
+}

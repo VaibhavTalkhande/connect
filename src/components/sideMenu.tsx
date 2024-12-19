@@ -11,7 +11,7 @@ const SideMenu: React.FC<SideMenuProps> = ({navItems,pathname}) => {
   return (
     <aside className=" hidden md:block w-64 rounded-xl sm:w-72 bg-transparent shadow-md">
 
-    <nav className="mt-8 block "> 
+    <nav className="mt-8 block relative "> 
       <ul>
         {navItems.map((item) => (
           <li key={item.href}>

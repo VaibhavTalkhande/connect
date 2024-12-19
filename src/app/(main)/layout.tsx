@@ -24,7 +24,7 @@ const MainLayout = ({
   return (
       <>
         {!isLoaded && <BarLoader color="#2563EB" width={"100%"} />}
-        <div className="flex flex-col min-h-full w-full  md:flex-row overflow-hidden">
+        <div className="top-24 flex flex-col min-h-screen w-full  md:flex-row overflow-hidden">
           <SideMenu navItems={navItems} pathname={pathname} />
           {/* Main content */}
           <div className="flex-1 flex flex-col  h-full overflow-hidden">

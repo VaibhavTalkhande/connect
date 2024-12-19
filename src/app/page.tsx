@@ -1,3 +1,4 @@
+"use server"
 import React from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -42,7 +43,7 @@ const howItWorks = [
 
 const Home = () => {
   return (
-    <main className="h-full mx-auto px-4 py-16">
+    <main className="h-full relative mx-auto px-4 py-16">
       {/* Hero Section */}
       <div className="flex flex-1 flex-col lg:flex-row items-center justify-between gap-12 mb-24">
         <div className="lg:w-1/2">
