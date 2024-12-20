@@ -1,27 +1,28 @@
 "use client";
+
 import axios from "axios";
 import { LinkIcon, EyeIcon, Pencil, Trash } from "lucide-react"; // Import icons from Lucide React
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { deleteEventById } from "../../actions/event";
+import { deleteEventById, getEvents } from "../../actions/event";
 import toast, { Toaster } from "react-hot-toast";
 
+
 type TimeSlot = {
-  id: number;
-  time: string;
-  isBooked: boolean;
+  id?: string;
+  time: Date;
+  isBooked?: boolean;
 };
 
 type DateSlot = {
-  id: number;
-  date: string;
+  id?: string;
+  date: Date;
   timeSlot: TimeSlot[];
 };
-
 type Event = {
-  id: number;
+  id?: string;
   title: string;
-  description: string;
+  description: string | null;
   price: number;
   dateSlot: DateSlot[];
 };
@@ -32,8 +33,10 @@ const EventList = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const router = useRouter();
 
+  const availableDates = events.map((event) => event.dateSlot.map((dateSlot) => dateSlot.date));
   const redirectToEvent = (id: string) => {
     router.push(`/events/${id}/edit`);
   };
@@ -52,8 +55,12 @@ const EventList = () => {
     const fetchEvents = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("/api/events/getEvent");
-        setEvents(response.data);
+        const response = await getEvents();
+        if (response.events) {
+          setEvents(response.events);
+        } else {
+          setError("No events found.");
+        }
       } catch (err) {
         setError("Error loading events.");
         console.error(err);
@@ -68,7 +75,7 @@ const EventList = () => {
     try {
       const response = await deleteEventById(id);
       if (response.status== 200) {
-        setEvents(events.filter((event) => event.id.toString() !== id));
+        setEvents(events.filter((event) =>event.id && event.id.toString() !== id));
         toast.success("Event deleted successfully");
       }
     } catch (err) {
@@ -82,6 +89,7 @@ const EventList = () => {
   return (
     <div className="w-full mx-auto px-4 py-16">
       <Toaster />
+
       <div className="flex h-full flex-wrap justify-start gap-6">
         {events.map((event) => (
           <div
@@ -97,12 +105,12 @@ const EventList = () => {
             {/* Buttons at the bottom */}
             <div className="flex-col   flex gap-4">
               <button
-               onClick={() => deleteEvent(event.id.toString())}
+               onClick={() => event.id && deleteEvent(event.id.toString())}
                className="  bg-red-600 text-white p-2 rounded-full hover:bg-gray-700">
                 <Trash className="w-6 h-6" />
               </button>
               <button
-                onClick={() => redirectToEvent(event.id.toString())}
+                onClick={() => event.id && redirectToEvent(event.id.toString())}
                 className="bg-teal-500 text-white p-2 rounded-full hover:bg-teal-600"
               >
                 <Pencil className="w-6 h-6" />

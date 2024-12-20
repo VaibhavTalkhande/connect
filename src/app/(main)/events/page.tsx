@@ -1,7 +1,9 @@
+
 import EventList from "@/components/EventList";
 import { PenBoxIcon } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 export const metadata:Metadata = {
   title: "Events",
   description: "Events",
@@ -20,7 +22,9 @@ const page = () => {
         
       </div>
       <div className="relative flex justify-center item-start h-full w-full">
+        <Suspense fallback={<div>Loading...</div>}>
         <EventList />
+        </Suspense>
       </div>
     </div>
   );

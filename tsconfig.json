@@ -27,7 +27,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/onboarding/page.tsx"
-, "src/app/(main)/events/[id]/edit/page.tsx"  ],
+    ".next/types/**/*.tsx"],
   "exclude": ["node_modules"]
 }
