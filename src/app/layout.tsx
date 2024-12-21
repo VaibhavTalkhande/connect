@@ -8,6 +8,7 @@ import "./globals.css";
 import Header from "@/components/header";
 
 import AuthProvider from "@/context/AuthContext";
+import { checkUser } from "@/lib/checkUser";
 
 export const metadata: Metadata = {
   title: "Connect",
@@ -20,6 +21,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
     <ClerkProvider>
       <AuthProvider>
@@ -28,8 +30,8 @@ export default function RootLayout({
             className={`${inter.className} dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200`}
           >
             {/* <Header/> */}
+            <main className="relative h-full bg-repeat-round bg-gradient-to-br  from-teal-300 via-black to-teal-950  overflow-x-hidden">
             <Header />
-            <main className="h-full relative  bg-gradient-to-br  from-teal-400 via-white to-teal-600  overflow-x-hidden">
               {children}
             </main>
           </body>

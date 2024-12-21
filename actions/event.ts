@@ -4,7 +4,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { cache } from "react";
 
 
-type Event = {
+export type Event = {
   id?: string;
   title: string;
   description: string | null;
@@ -36,6 +36,7 @@ export const getEvents = async () => {
     }
     const events = await db.event.findMany({
       where: { userId: userId.id },
+      orderBy:{createdAt:"desc"},
       select: {
         id: true,
         title: true,

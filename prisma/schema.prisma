@@ -64,7 +64,7 @@ model TimeSlot{
   dateSlot       DateSlot  @relation(fields: [dateSlotId], references: [id], onDelete: Cascade)
   time           DateTime
   isBooked       Boolean    @default(false)
-  booking        Booking? 
+  booking        Booking?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 }

@@ -1,3 +1,4 @@
+import { checkUser } from "@/lib/checkUser";
 import { db } from "@/lib/prisma";
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
@@ -5,6 +6,7 @@ import { NextResponse } from "next/server";
 
 
 export async function GET() {
+
   const user = await currentUser();
   if (!user) {
     return ;
@@ -23,8 +25,9 @@ export async function GET() {
     }
 
     // Create a new user if not found
+    
     const name = `${user.firstName} ${user.lastName}`;
-    const uniqueName = name.split(" ").join("_") + user.id.slice(-4);
+    const uniqueName = user.emailAddresses[0].emailAddress.split("@")[0];
     const updateUser = await clerkClient();
     console.log(uniqueName);
 

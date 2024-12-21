@@ -1,6 +1,6 @@
 "use client"
 import React, { useContext, useEffect } from "react";
-import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, SignUp, SignUpButton } from "@clerk/nextjs";
 import Link from "next/link";
 import UserMenu from "./user-menu";
 
@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import{ AuthContext} from "@/context/AuthContext";
 import { Role } from "@/types/ModelTypes";
 import { DashboardIcon } from "@radix-ui/react-icons";
+import { checkUser } from "@/lib/checkUser";
 
 
 
@@ -16,12 +17,12 @@ import { DashboardIcon } from "@radix-ui/react-icons";
 function Header() {
   const router = useRouter()
   const { user } = useContext(AuthContext);
-  console.log(user)
   useEffect(
     () => {
       if (user) {
+        console.log(user);
         if (user.role === Role.MENTOR) {
-          router.push("/dashboard/mentor");
+          router.push("/dashboard/");
         } else if (user.role === Role.MENTEE) {
           router.push("/dashboard/mentee");
         }
@@ -30,7 +31,7 @@ function Header() {
     [user,router]
  )
   return (
-    <nav className=" mx-auto fixed top-0  z-10 w-full my-auto py-4 px-4 flex justify-between rounded-lg  bg-black  border-bottom-black items-center">
+    <nav className=" mx-auto  w-full my-auto py-4 px-4 flex justify-between rounded-lg  bg-black  border-bottom-black items-center">
       <Link href="/" className="flex items-center">
         <h1 className="text-4xl font-extrabold font-sans text-pretty  text-teal-500">
           Connect
@@ -38,20 +39,24 @@ function Header() {
       </Link>
 
       <div className="flex items-center gap-4">
+        <SignedOut>
+          <SignInButton forceRedirectUrl="/">
+            <button className="text-teal-500 font-semibold rounded-2xl px-4 py-2 border-2 border-teal-500">Login</button>
+          </SignInButton>
+          <SignUpButton forceRedirectUrl={"/onboarding"}>
+            <button className="text-teal-500 font-semibold rounded-2xl px-4 py-2 border-2 border-teal-500">Sign Up</button>
+          </SignUpButton>
+        </SignedOut>
+        <SignedIn>
         <Link
           href="/dashboard"
           passHref
-          className="bg-slate-900 font-semibold text-white border-2 rounded-[0.5rem] flex py-2 px-4 items-center"
+          className="bg-slate-900 font-semibold text-white border-white border-2 rounded-[0.5rem] flex py-2 px-4 items-center"
         >
+
           <DashboardIcon className="mr-2 h-5 w-5" />
             DashBoard
         </Link>
-        <SignedOut>
-          <SignInButton forceRedirectUrl="/dashboard">
-            <button className="text-slate-950 font-semibold rounded-md px-4 py-2 border-2 border-slate-950">Login</button>
-          </SignInButton>
-        </SignedOut>
-        <SignedIn>
           <UserMenu />
         </SignedIn>
       </div>

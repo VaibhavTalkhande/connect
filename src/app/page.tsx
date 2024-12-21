@@ -65,7 +65,7 @@ const Home = () => {
             <Image
               src="/poster.png"
               alt="Scheduling illustration"
-              layout="fill"
+              fill
               objectFit="contain"
             />
           </div>

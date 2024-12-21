@@ -1,5 +1,5 @@
 "use client"
-import React, { use, useContext, useState } from "react";
+import React, { use, useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -116,25 +116,36 @@ const OnboardingForm: React.FC = () => {
     }
   };
   const watchValue = watch("socials");
-  console.log(watchValue);
+
   // Form submit handler
   const onSubmit = async (data: UserFormInput) => {
-  console.log("Form data:", data);
-  try {
-    const res = await axios.post("/api/user/onboarding", data);
-    if (res.status === 200) {
-      setUser(res.data.user);
-      if (user?.role === Role.MENTOR) {
-        console.log("User is a mentor");
-        router.push("/dashboard");
-      }
-      console.log("User is a mentee");
-    }
-  } catch (error) {
-    console.error("Error submitting form:", error);
-  }
-  };
+    console.log("Form data:", data);
+    try {
+      const res = await axios.post("/api/user/onboarding", data);
+      if (res.status === 200) {
+        console.log(res.data.message);
 
+        const updatedUser = res.data.user; // Use the updated user directly
+        setUser(updatedUser);
+        console.log(updatedUser);
+        console.log("User updated successfully");
+  
+         if (updatedUser.role === Role.MENTEE) {
+          console.log("User is a mentee");
+          router.push("/dashboard");
+        }
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
+  
+  useEffect(() => {
+    if (user && user.role) {
+      router.push("/dashboard");
+    }
+  }
+  , [user]);
 
   return (
     <form
