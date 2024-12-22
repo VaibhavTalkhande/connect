@@ -94,24 +94,24 @@ const EventList = () => {
         {events.map((event) => (
           <div
             key={event.id}
-            className="relative flex flex-row p-6 w-full sm:w-72 bg-black shadow-lg rounded-xl transform transition hover:scale-105"
+            className="relative flex flex-row p-6 w-full h-[30dvh] sm:w-72 bg-teal-400 shadow-lg rounded-xl transform transition hover:scale-105"
           >
-            <div className="block absolute inset-0 transform translate-x-[-10px] translate-y-[-10px] bg-teal-500 rounded-xl -z-10"></div>
+            <div className="block absolute inset-0 transform translate-x-[-10px] translate-y-[-10px] bg-black border-2 border-teal-400 rounded-xl -z-10"></div>
             <div className="relative z-10 w-[90%] flex-col mb-4">
-              <h2 className="text-xl font-bold mb-2">{event.title || "Event Title"}</h2>
-              <p className="text-gray-700 mb-4">{event.description || "No description available"}</p>
+              <h2 className="text-teal-400 text-xl font-bold mb-2">{event.title || "Event Title"}</h2>
+              <p className="text-gray-700 mb-4 truncate max-h-[50%] text-clip p-1 overflow-hidden text-wrap">{event.description || "No description available"}</p>
             </div>
 
             {/* Buttons at the bottom */}
             <div className="flex-col   flex gap-4">
               <button
                onClick={() => event.id && deleteEvent(event.id.toString())}
-               className="  bg-red-600 text-white p-2 rounded-full hover:bg-gray-700">
+               className="   text-teal-400 p-2 rounded-full hover:bg-red-700">
                 <Trash className="w-6 h-6" />
               </button>
               <button
                 onClick={() => event.id && redirectToEvent(event.id.toString())}
-                className="bg-teal-500 text-white p-2 rounded-full hover:bg-teal-600"
+                className=" text-teal-400 p-2 rounded-full hover:bg-teal-600"
               >
                 <Pencil className="w-6 h-6" />
               </button>
@@ -132,8 +132,8 @@ const EventList = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg w-11/12 sm:w-1/3">
             <h2 className="text-2xl font-bold mb-4">{selectedEvent.title}</h2>
-            <p className="text-gray-700 mb-4">{selectedEvent.description}</p>
-            <p className="text-gray-700 mb-4">Price:{selectedEvent.price} Rs</p>
+            <p className="text-gray-600 mb-4">{selectedEvent.description}</p>
+            <p className="text-gray-600 mb-4">Price:{selectedEvent.price} Rs</p>
             <div className="space-y-2">
               {selectedEvent.dateSlot.map((dateSlot) => (
                 <div key={dateSlot.id} className="border p-4 rounded-lg">

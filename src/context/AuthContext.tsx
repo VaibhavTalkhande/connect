@@ -28,18 +28,22 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const fetchUser = useCallback(async () => {
 
         try {
-            if(user) return user;
+            if (user){
             const userDetails = await axios.get("/api/user/ValidateUser");
-            if (userDetails.data.user) {
-                console.log("this is one",userDetails.data.user);
-                const userdata = userDetails.data.user;
-                setUser(userdata);
-                return userdata;  // Return the data instead
+                if (userDetails.data.user) {
+                    console.log("this is one", userDetails.data.user);
+                    const userdata = userDetails.data.user;
+                    setUser(userdata);
+                    return userdata;  // Return the data instead
+                }
+                else {
+                    return;
+                }
             }
         } catch (error) {
             console.error('Error fetching user:', error);
         }
-    }, []); // Remove user from dependencies
+    }, []);
 
     useEffect(() => {
         const checkAndRedirect = async () => {

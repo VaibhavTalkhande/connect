@@ -46,13 +46,12 @@ const Home = () => {
     <main className="h-full relative mx-auto px-4 py-16">
       {/* Hero Section */}
       <div className="flex flex-1 flex-col lg:flex-row items-center justify-between gap-12 mb-24">
-        <div className="lg:w-1/2">
-          <h1 className="text-7xl font-extrabold gradient-title pb-6">
-            Simplify Your Scheduling
+        <div className="lg:w-1/2 m-auto ml p-2">
+          <h1 className="text-7xl font-semibold text-teal-400 gradient-title pb-6">
+            Connect To Mentor 
           </h1>
-          <p className="text-xl text-gray-600 mb-10">
-            Schedulrr helps you manage your time effectively. Create events, set
-            your availability, and let others book time with you seamlessly.
+          <p className="text-xl text-wrap ml-auto lg:w-fit sm:w-full p-2   text-gray-600 mb-10">
+            Simply find | schedule | book the appointment with the expert in industry
           </p>
           <Link href={"/dashboard"}>
             <Button size="lg" className="text-lg">
@@ -125,7 +124,7 @@ const Home = () => {
       </div>
 
       {/* CTA Section */}
-      <div className="bg-blue-600 text-white rounded-lg p-8 text-center">
+      <div className="bg-teal-600 text-black rounded-lg p-8 text-center">
         <h2 className="text-3xl font-bold mb-4">
           Ready to Simplify Your Scheduling?
         </h2>
@@ -134,12 +133,12 @@ const Home = () => {
           management.
         </p>
         <Link href={"/dashboard"}>
-          <Button size="lg" variant="secondary" className="text-blue-600">
+          <Button size="lg" variant="secondary" className="text-teal-600">
             Start For Free <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </Link>
       </div>
-      <footer className="text-center text-sm text-gray-500 dark:text-gray-400 py-12 bg-slate-900 dark:bg-gray-800">
+      <footer className="text-center text-sm text-gray-500 dark:text-gray-400 py-12 bg-slate-800 dark:bg-gray-800">
         <div className="py-4 container mx-auto px-4 text-center">
           <p>Made with ❤️ </p>
         </div>

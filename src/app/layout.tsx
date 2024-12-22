@@ -30,7 +30,7 @@ export default function RootLayout({
             className={`${inter.className} dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200`}
           >
             {/* <Header/> */}
-            <main className="relative h-full bg-repeat-round bg-gradient-to-br  from-teal-300 via-black to-teal-950  overflow-x-hidden">
+            <main className="relative h-full bg-repeat-round bg-gradient-to-br  from-black to-teal-950  overflow-x-hidden">
             <Header />
               {children}
             </main>
