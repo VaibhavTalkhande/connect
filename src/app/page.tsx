@@ -26,7 +26,7 @@ const features = [
 ];
 
 const howItWorks = [
-  { step: "Sign Up", description: "Create your free Schedulrr account" },
+  { step: "Sign Up", description: "Create your free Scheduler account" },
   {
     step: "Set Availability",
     description: "Define when you're available for meetings",
@@ -129,7 +129,7 @@ const Home = () => {
           Ready to Simplify Your Scheduling?
         </h2>
         <p className="text-xl mb-6">
-          Join thousands of professionals who trust Schedulrr for efficient time
+          Join thousands of professionals who trust Scheduler for efficient time
           management.
         </p>
         <Link href={"/dashboard"}>
