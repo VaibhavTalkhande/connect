@@ -13,7 +13,6 @@ import { checkUser } from "@/lib/checkUser";
 
 
 
-
 function Header() {
   const router = useRouter()
   const { user } = useContext(AuthContext);
@@ -51,7 +50,7 @@ function Header() {
         <Link
           href="/dashboard"
           passHref
-          className="bg-slate-900 font-semibold text-white border-white border-2 rounded-[0.5rem] flex py-2 px-4 items-center"
+          className="font-semibold text-teal-400 border-teal-400 border-2 rounded-[0.5rem] flex py-2 px-4 items-center"
         >
 
           <DashboardIcon className="mr-2 h-5 w-5" />

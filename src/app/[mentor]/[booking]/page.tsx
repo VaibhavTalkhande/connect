@@ -3,8 +3,9 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Event, getEventById } from '../../../../actions/event';
 import { DayPicker } from 'react-day-picker'; // Import DayPicker
-import 'react-day-picker/dist/style.css'; // Import DayPicker styles
+import '../../globals.css'; // Import DayPicker styles
 import { set } from 'zod';
+import { Calendar } from '@/components/ui/calendar';
 
 const Page = () => {
   const params = useParams();
@@ -43,43 +44,51 @@ const Page = () => {
   };
 
   return (
-    <div className="relative bg-white min-h-screen w-screen flex flex-col justify-center items-center">
+    <div className="relative min-h-screen p-10 text-teal-400 flex flex-col justify-center items-center">
       {event && (
-        <div className="flex flex-col justify-center w-full items-center bg-cyan-400">
-          <h2>{event.title}</h2>
-          <p>{event.description}</p>
-          <p>{event.price}</p>
-
-          {/* Calendar component */}
-          <div className="my-4">
-            <DayPicker 
-                mode='single'
-                selected={selectedDate ? selectedDate.date : undefined}
-                modifiers={{
-                    selected: (date) => dates.some((d) => d.date.toDateString() === date.toDateString()),                    
-                }}
-                classNames={{
-                    today: `border-amber-500`, // Add a border to today's date
-                    selected: `bg-amber-500 border-amber-500 text-white`, // Highlight the selected day
-                     // Add a shadow to the root element
-                    
-                  }}
-                disabled={(date:Date) => !dates.some((d) => d.date.toDateString() === date.toDateString())}
-                onDayClick={handleDateChange}
-             /> 
-                {showDatePicker && (
-                    selectedDate && (
-                        selectedDate.time.map((time) => (
-                            <div key={time.toISOString()} className="flex flex-col bg-black text-teal-400 m-auto justify-center items-center">
-                                <p>{time.toLocaleTimeString()}</p>
-                            </div>
-                        ))
-                    )
-                )}
-        
-    
+        <div className="flex sm:flex-col  lg:flex-row justify-evenly  w-[80%] gap-1 items-center">
+          <div className="flex flex-col w-[40%] flex-">
+            <h2 className="font-bold text-7xl">{event.title}</h2>
+            <p className="text-3xl font-sans">{event.description}</p>
+            <p className="text-2xl font-extralight">${event.price}</p>
           </div>
 
+          {/* Calendar component */}
+          <div className="my-4 flex justify-center w-1/2">
+            <Calendar
+              mode="single"
+              selected={selectedDate ? selectedDate.date : undefined}
+              onSelect={(date: unknown) =>
+                dates.some((d) => d.date.toDateString() === (date as Date).toDateString())
+              }
+              onDayClick={handleDateChange}
+              disabled={(date: Date) =>
+                !dates.some(
+                  (d) => d.date.toDateString() === date.toDateString()
+                )
+              }
+              modifiersClassNames={{
+                selected: `rounded-xl bg-teal-500 text-white`, // Highlight the selected day
+                root: `w-[500px] shadow-lg  pl-5 justify-center flex`, // Add a shadow to the root element
+                chevron: `m-auto rounded-xl  text-blue-500`,
+              }}
+              className="bg-black rounded-xl text-teal-500"
+            />
+
+            <div className="m-auto flex flex-col gap-1 justify-start items-start ">
+              <h1>Available Time</h1>
+              {showDatePicker &&
+                selectedDate &&
+                selectedDate.time.map((time) => (
+                  <div
+                    key={time.toISOString()}
+                    className="flex flex-col bg-black rounded-md min-w-full text-teal-400 m-auto justify-center items-center"
+                  >
+                    <p>{time.toLocaleTimeString()}</p>
+                  </div>
+                ))}
+            </div>
+          </div>
 
           {/* {event.dateSlot.map((date) => (
             <div key={date.id}>
