@@ -61,8 +61,8 @@ const Page = () => {
                 classNames={{
                     today: `border-amber-500`, // Add a border to today's date
                     selected: `bg-amber-500 border-amber-500 text-white`, // Highlight the selected day
-                    root: `w-[500px] shadow-lg pl-5 justify-center flex`, // Add a shadow to the root element
-                    chevron: `m-auto fill-amber-500` // Change the color of the chevron
+                     // Add a shadow to the root element
+                    
                   }}
                 disabled={(date:Date) => !dates.some((d) => d.date.toDateString() === date.toDateString())}
                 onDayClick={handleDateChange}

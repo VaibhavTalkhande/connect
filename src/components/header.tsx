@@ -31,7 +31,7 @@ function Header() {
     [user,router]
  )
   return (
-    <nav className=" mx-auto  w-full my-auto py-4 px-4 flex justify-between rounded-lg  bg-black  border-bottom-black items-center">
+    <nav className=" mx-auto  w-full my-auto py-4 px-4 flex justify-between rounded-lg  bg-black  border-b-2 border-b-teal-400 border-bottom-black items-center">
       <Link href="/" className="flex items-center">
         <h1 className="text-4xl font-extrabold font-sans text-pretty  text-teal-500">
           Connect
