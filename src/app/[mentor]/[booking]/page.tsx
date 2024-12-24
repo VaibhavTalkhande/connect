@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { Event, getEventById } from '../../../../actions/event';
 import { DayPicker } from 'react-day-picker'; // Import DayPicker
 import '../../globals.css'; // Import DayPicker styles
-import { set } from 'zod';
 import { Calendar } from '@/components/ui/calendar';
+import { useForm } from 'react-hook-form';
 
 const Page = () => {
   const params = useParams();
@@ -14,6 +14,15 @@ const Page = () => {
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
   const [dates, setDates] = useState<{ date: Date; time: Date[] }[]>([]);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const { register, handleSubmit } = useForm({
+    defaultValues: {
+      mentorId: params.mentor as string,
+      eventId: event?.id as string,
+      date: selectedDate?.date as Date,
+      time: selectedTime as Date,
+
+    }
+  });
   const fetchEvent = async () => {
     const bookingId = params.booking as string;
     if (bookingId) {
@@ -47,9 +56,12 @@ const Page = () => {
     <div className="relative min-h-screen p-10 text-teal-400 flex flex-col justify-center items-center">
       {event && (
         <div className="flex sm:flex-col  lg:flex-row justify-evenly  w-[80%] gap-1 items-center">
-          <div className="flex flex-col w-[40%] flex-">
+          <div className="flex flex-col w-[40%] gap-4">
+            <span className="text-2xl font-extralight">Event Name</span>
             <h2 className="font-bold text-7xl">{event.title}</h2>
+            <span className="text-2xl font-extralight">Description</span>
             <p className="text-3xl font-sans">{event.description}</p>
+            <span className="text-2xl font-extralight">Price</span>
             <p className="text-2xl font-extralight">${event.price}</p>
           </div>
 
@@ -84,23 +96,11 @@ const Page = () => {
                     key={time.toISOString()}
                     className="flex flex-col bg-black rounded-md min-w-full text-teal-400 m-auto justify-center items-center"
                   >
-                    <p>{time.toLocaleTimeString()}</p>
+                    <input type='radio' >{time.toLocaleTimeString()}</input>
                   </div>
                 ))}
             </div>
           </div>
-
-          {/* {event.dateSlot.map((date) => (
-            <div key={date.id}>
-              <h3>{new Date(date.date).toLocaleDateString()}</h3>
-              {date.timeSlot.map((time) => (
-                <div key={time.id}>
-                  <p>{new Date(time.time).toLocaleTimeString()}</p>
-                  <p>{time.isBooked ? 'Booked' : 'Available'}</p>
-                </div>
-              ))}
-            </div>
-          ))} */}
         </div>
       )}
     </div>
