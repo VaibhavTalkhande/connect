@@ -1,61 +1,109 @@
-"use client"
-import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { Event, getEventById } from '../../../../actions/event';
-import { DayPicker } from 'react-day-picker'; // Import DayPicker
-import '../../globals.css'; // Import DayPicker styles
-import { Calendar } from '@/components/ui/calendar';
-import { useForm } from 'react-hook-form';
+"use client";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Event, getEventById } from "../../../../actions/event";
+import { Calendar } from "@/components/ui/calendar";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { time } from "console";
 
+
+const timeSlotSchema = z.object({
+  id:z.string(),
+  time: z.date(),
+  isBooked: z.boolean(),
+})
+const bookingSchema = z.object({
+  name: z.string().min(2),
+  email: z.string().email(),
+  timeSlotId: z.string(),
+  eventId: z.string(),
+  timeSlot:timeSlotSchema,
+});
 const Page = () => {
   const params = useParams();
   const [event, setEvent] = useState<Event | null>(null);
-  const [selectedDate, setSelectedDate] = useState<{ date: Date; time: Date[] } | null>(null);
-  const [selectedTime, setSelectedTime] = useState<Date | null>(null);
+  const [selectedDate, setSelectedDate] = useState<{
+    date: Date;
+    
+  } | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [dates, setDates] = useState<{ date: Date; time: Date[] }[]>([]);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const { register, handleSubmit } = useForm({
+  const [loading, setLoading] = useState(false);
+
+  const form = useForm({
+    resolver: zodResolver(bookingSchema),
     defaultValues: {
       mentorId: params.mentor as string,
-      eventId: event?.id as string,
-      date: selectedDate?.date as Date,
-      time: selectedTime as Date,
-
-    }
+      eventId: "",
+      name: "",
+      email: "",
+      date: new Date(),
+      TimeSlot: {
+        id:"",
+        time: new Date(),
+      }
+    },
   });
+
   const fetchEvent = async () => {
     const bookingId = params.booking as string;
     if (bookingId) {
       try {
-        const response = await getEventById(bookingId); // Fetch event using bookingId
+        const response = await getEventById(bookingId);
         setEvent(response?.event ?? null);
         setDates(
-            response?.event?.dateSlot.map((date) => ({
-                date: date.date,
-                time: date.timeSlot.map((time) => time.time),
-            })) ?? []
-            );
+          response?.event?.dateSlot.map((date) => ({
+            date: new Date(date.date),
+            time: date.timeSlot.map((time) => new Date(time.time)),
+          })) ?? []
+        );
+        form.setValue("eventId", response?.event?.id || "");
       } catch (error) {
-        console.error('Error fetching event:', error);
+        console.error("Error fetching event:", error);
       }
     }
   };
 
   useEffect(() => {
     fetchEvent();
-  }, [params.booking]); // Re-fetch when the booking param changes
+  }, [params.booking]);
 
   const handleDateChange = (date: Date) => {
-    const selectedDate = dates.find((d) => d.date.toDateString() === date.toDateString()) ?? null;
+    const selectedDate =
+      dates.find((d) => d.date.toDateString() === date.toDateString()) ?? null;
     setSelectedDate(selectedDate);
     setShowDatePicker(true);
-    console.log('Selected Date:', date);
+    form.setValue("date", date);
+    setSelectedTime(null);
+  };
+
+  const handleTimeSelect = (time: Date, timeSlotId: string) => {
+    setSelectedTime(timeSlotId);
+    form.setValue("time", time);
+    form.setValue("timeSlotId", timeSlotId);
+  };
+
+  const onSubmit = async (data: z.infer<typeof bookingSchema>) => {
+    try {
+      setLoading(true);
+      // Add your booking submission logic here
+      console.log("Form data:", data);
+    } catch (error) {
+      console.error("Booking error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="relative min-h-screen p-10 text-teal-400 flex flex-col justify-center items-center">
       {event && (
-        <div className="flex sm:flex-col  lg:flex-row justify-evenly  w-[80%] gap-1 items-center">
+        <div className="flex sm:flex-col lg:flex-row justify-evenly w-[80%] gap-1 items-center">
           <div className="flex flex-col w-[40%] gap-4">
             <span className="text-2xl font-extralight">Event Name</span>
             <h2 className="font-bold text-7xl">{event.title}</h2>
@@ -65,41 +113,65 @@ const Page = () => {
             <p className="text-2xl font-extralight">${event.price}</p>
           </div>
 
-          {/* Calendar component */}
-          <div className="my-4 flex justify-center w-1/2">
+          <div className="flex flex-col w-1/2 gap-8">
             <Calendar
               mode="single"
-              selected={selectedDate ? selectedDate.date : undefined}
-              onSelect={(date: unknown) =>
-                dates.some((d) => d.date.toDateString() === (date as Date).toDateString())
-              }
-              onDayClick={handleDateChange}
-              disabled={(date: Date) =>
+              selected={selectedDate?.date}
+              onSelect={(date) => date && handleDateChange(date)}
+              disabled={(date) =>
                 !dates.some(
                   (d) => d.date.toDateString() === date.toDateString()
                 )
               }
-              modifiersClassNames={{
-                selected: `rounded-xl bg-teal-500 text-white`, // Highlight the selected day
-                root: `w-[500px] shadow-lg  pl-5 justify-center flex`, // Add a shadow to the root element
-                chevron: `m-auto rounded-xl  text-blue-500`,
-              }}
               className="bg-black rounded-xl text-teal-500"
+              modifiersClassNames={{
+                selected: "rounded-xl bg-teal-500 text-white",
+                root: "w-full shadow-lg pl-5 justify-center flex",
+                chevron: "m-auto rounded-xl text-blue-500",
+              }}
             />
 
-            <div className="m-auto flex flex-col gap-1 justify-start items-start ">
-              <h1>Available Time</h1>
-              {showDatePicker &&
-                selectedDate &&
-                selectedDate.time.map((time) => (
-                  <div
-                    key={time.toISOString()}
-                    className="flex flex-col bg-black rounded-md min-w-full text-teal-400 m-auto justify-center items-center"
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                {showDatePicker &&
+                  selectedDate?.time.map((time, index) => (
+                    <Button
+                      key={index}
+                      type="button"
+                      variant={
+                        selectedTime === `time-${index}` ? "default" : "outline"
+                      }
+                      onClick={() => handleTimeSelect(time)}
+                      className="w-full"
+                    >
+                      {time.toLocaleTimeString()}
+                    </Button>
+                  ))}
+              </div>
+
+              {selectedTime && (
+                <div className="space-y-4">
+                  <Input
+                    {...form.register("name")}
+                    placeholder="Your Name"
+                    className="w-full bg-transparent border-teal-400 text-teal-400"
+                  />
+                  <Input
+                    {...form.register("email")}
+                    type="email"
+                    placeholder="Your Email"
+                    className="w-full bg-transparent border-teal-400 text-teal-400"
+                  />
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-teal-500 hover:bg-teal-600"
                   >
-                    <input type='radio' >{time.toLocaleTimeString()}</input>
-                  </div>
-                ))}
-            </div>
+                    {loading ? "Booking..." : "Book Session"}
+                  </Button>
+                </div>
+              )}
+            </form>
           </div>
         </div>
       )}

@@ -1,6 +1,7 @@
 "use server";
 import { db } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { ClerkProvider } from "@clerk/nextjs";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 const getBooking = async () => {
   const { userId } = await auth();
@@ -47,4 +48,13 @@ const getBooking = async () => {
   }
 };
 
-export default getBooking;
+async function bookAppointment({ mentorId, eventId, date, timeSlotId,time, name, email }: any) {
+  const { userId } = await auth();
+  
+}
+
+
+module.exports = {
+  getBooking,
+  bookAppointment,
+}
