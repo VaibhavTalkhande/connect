@@ -6,7 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { ArrowRight, Calendar, Clock, LinkIcon } from "lucide-react";
 import TestimonialsCarousel from "@/components/testimonials";
 import Link from "next/link";
-
+import ProgressBar from "react-scroll-progress-bar";
 const features = [
   {
     icon: Calendar,
@@ -44,14 +44,17 @@ const howItWorks = [
 const Home = () => {
   return (
     <main className="h-full relative mx-auto px-4 py-16">
+      <ProgressBar height="6" bgcolor="#000" duration="0.2" />
+
       {/* Hero Section */}
       <div className="flex flex-1 flex-col lg:flex-row items-center justify-between gap-12 mb-24">
         <div className="lg:w-1/2 m-auto ml p-2">
           <h1 className="text-7xl font-semibold text-teal-400 gradient-title pb-6">
-            Connect To Mentor 
+            Connect To Mentor
           </h1>
           <p className="text-xl text-wrap ml-auto lg:w-fit sm:w-full p-2   text-gray-600 mb-10">
-            Simply find | schedule | book the appointment with the expert in industry
+            Simply find | schedule | book the appointment with the expert in
+            industry
           </p>
           <Link href={"/dashboard"}>
             <Button size="lg" className="text-lg">

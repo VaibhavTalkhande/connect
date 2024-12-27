@@ -131,47 +131,7 @@ const Page = () => {
               }}
             />
 
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                {showDatePicker &&
-                  selectedDate?.time.map((time, index) => (
-                    <Button
-                      key={index}
-                      type="button"
-                      variant={
-                        selectedTime === `time-${index}` ? "default" : "outline"
-                      }
-                      onClick={() => handleTimeSelect(time)}
-                      className="w-full"
-                    >
-                      {time.toLocaleTimeString()}
-                    </Button>
-                  ))}
-              </div>
 
-              {selectedTime && (
-                <div className="space-y-4">
-                  <Input
-                    {...form.register("name")}
-                    placeholder="Your Name"
-                    className="w-full bg-transparent border-teal-400 text-teal-400"
-                  />
-                  <Input
-                    {...form.register("email")}
-                    type="email"
-                    placeholder="Your Email"
-                    className="w-full bg-transparent border-teal-400 text-teal-400"
-                  />
-                  <Button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full bg-teal-500 hover:bg-teal-600"
-                  >
-                    {loading ? "Booking..." : "Book Session"}
-                  </Button>
-                </div>
-              )}
-            </form>
           </div>
         </div>
       )}
